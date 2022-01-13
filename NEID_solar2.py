@@ -13,12 +13,11 @@ sys.path.append("../")
 from FIESTA_functions import *
 import pandas as pd
 import shutil
-# testing 
 
 #--------------------------------------------------------------------
 # import data 
 #--------------------------------------------------------------------
-file_ccf	= sorted(glob.glob('./test_data/01/*.fits'))
+file_ccf	= sorted(glob.glob('../../AstroData/test_data/01/*.fits'))
 quality_df  = pd.read_csv('combined_rvs_1.csv')
 
 filenames = [quality_df['Filename'][i][-27:] for i in range(len(quality_df))]
@@ -55,8 +54,8 @@ for n in range(N_file):
 	σCCF[:,n] /= np.median(CCF[:,n])
 	CCF[:,n] /= np.median(CCF[:,n])
 
-plt.plot(v_grid, CCF)
-plt.show()
+# plt.plot(v_grid, CCF)
+# plt.show()
 
 idx_ccf = (v_grid>=84.50) & (v_grid<=114.25)
 plt.plot(v_grid[idx_ccf], CCF[idx_ccf,:])
