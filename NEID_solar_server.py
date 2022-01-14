@@ -17,7 +17,7 @@ import shutil
 #--------------------------------------------------------------------
 # import data 
 #--------------------------------------------------------------------
-file_ccf	= sorted(glob.glob('../../AstroData/test_data/01/*.fits'))
+file_ccf	= sorted(glob.glob('/gpfs/group/ebf11/default/pipeline/data/neid_solar/v1.1/L2/2021/06/01/*.fits')) 
 quality_df  = pd.read_csv('combined_rvs_1.csv')
 
 filenames = [quality_df['Filename'][i][-27:] for i in range(len(quality_df))]
@@ -85,7 +85,7 @@ plt.plot((bjd-bjd[0])*24*60, rv-np.mean(rv), 'k-', alpha=0.3, lw=2)
 plt.title('NEID solar RV')
 plt.xlabel('T [min]')
 plt.ylabel('RV [m/s]')
-plt.legend()
+# plt.legend()
 plt.savefig('NEID_solar_RV.png')
 plt.show()
 
@@ -98,9 +98,6 @@ CCF_backup 	= CCF
 
 # plt.plot(v_grid, CCF)
 # plt.show()
-
-# CCF = CCF_backup
-# σCCF = σCCF_backup
 
 # Information of the hdulist
 '''
