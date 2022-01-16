@@ -41,7 +41,7 @@ for date in daterange(start_date, end_date):
     σrv			= np.zeros(N_file)    
     CCF 		= []
 
-    with alive_bar(1000) as bar:
+    with alive_bar(N_file) as bar:
         for n in range(N_file):
             if file_ccf[n][-27:] in filenames:
                 with fits.open(file_ccf[n]) as hdulist:
