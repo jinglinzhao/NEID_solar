@@ -55,8 +55,8 @@ for date in daterange(start_date, end_date):
                 else:
                     CCF = np.vstack((CCF, ccf_per_obs)) 
 
-            np.savetxt(path + 'ccf_o_' + file_ccf[n][-27:-4] + 'ccf', ccf_per_order)
-            np.savetxt(path + 'CCF_' + date.strftime("%Y-%m-%d") + '.txt', CCF)
+            np.savetxt(path + '/' + file_ccf[n][-27:-4] + 'ccf', ccf_per_order)
+            np.savetxt('./data/' + date.strftime("%Y-%m-%d") + '.CCF', CCF)
 
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
