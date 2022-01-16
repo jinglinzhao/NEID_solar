@@ -40,23 +40,25 @@ for date in daterange(start_date, end_date):
     σrv			= np.zeros(N_file)    
     CCF 		= []
 
-    for n in range(N_file):
-        if file_ccf[n][-27:] in filenames:
-            with fits.open(file_ccf[n]) as hdulist:
-                header 	= hdulist[12].header
-                bjd[n] 	= header['CCFJDMOD']
-                rv[n] 	= header['CCFRVMOD']*1000
-                σrv[n]	= header['DVRMSMOD']*1000
-                ccf_per_order   = hdulist[12].data                
-                ccf_per_obs     = np.sum(ccf_per_order, axis=0)
-                v_grid 	= header['CCFSTART'] + np.arange(len(ccf_per_obs))*header['CCFSTEP']
-                if n == 0:
-                    CCF = ccf_per_obs
-                else:
-                    CCF = np.vstack((CCF, ccf_per_obs)) 
+    with alive_bar(1000) as bar:
+        for n in range(N_file):
+            if file_ccf[n][-27:] in filenames:
+                with fits.open(file_ccf[n]) as hdulist:
+                    header 	= hdulist[12].header
+                    bjd[n] 	= header['CCFJDMOD']
+                    rv[n] 	= header['CCFRVMOD']*1000
+                    σrv[n]	= header['DVRMSMOD']*1000
+                    ccf_per_order   = hdulist[12].data                
+                    ccf_per_obs     = np.sum(ccf_per_order, axis=0)
+                    v_grid 	= header['CCFSTART'] + np.arange(len(ccf_per_obs))*header['CCFSTEP']
+                    if n == 0:
+                        CCF = ccf_per_obs
+                    else:
+                        CCF = np.vstack((CCF, ccf_per_obs)) 
 
-            np.savetxt(path + '/' + file_ccf[n][-27:-4] + 'ccf', ccf_per_order)
-            np.savetxt('./data/' + date.strftime("%Y-%m-%d") + '.CCF', CCF)
+                np.savetxt(path + '/' + file_ccf[n][-27:-4] + 'ccf', ccf_per_order)
+                np.savetxt('./data/' + date.strftime("%Y-%m-%d") + '.CCF', CCF)
+            bar()
 
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
