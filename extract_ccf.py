@@ -44,7 +44,7 @@ for date in daterange(start_date, end_date):
                 σrv[n]	= header['DVRMSMOD']*1000
                 ccf_per_order   = hdulist[12].data
                 ccf_per_obs     = np.sum(ccf_per_order, axis=0)
-                v_grid 	= header['CCFSTART'] + np.arange(len(ccf))*header['CCFSTEP']
+                v_grid 	= header['CCFSTART'] + np.arange(len(ccf_per_obs))*header['CCFSTEP']
                 if n == 0:
                     CCF = ccf_per_obs
                 else:
