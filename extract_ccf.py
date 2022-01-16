@@ -5,6 +5,7 @@ import pandas as pd
 from astropy.io import fits
 from datetime import timedelta, date
 from datetime import datetime
+from alive_progress import alive_bar
 
 #--------------------------------------------------------------------
 # Functions
