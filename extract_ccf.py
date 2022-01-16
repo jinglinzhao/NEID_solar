@@ -26,6 +26,11 @@ start_time  = datetime.now()
 for date in daterange(start_date, end_date):
 
     print(date.strftime("%Y-%m-%d"))
+    path = ('./data/' + date.strftime('%m') + '/' + date.strftime('%d'))
+    if not os.path.exists(path):
+        os.makedirs(path)
+        print('The new directory ' + path + ' is created!')
+
     file_ccf = sorted(glob.glob('/gpfs/group/ebf11/default/pipeline/data/neid_solar/v1.1/L2/2021/' + \
                                 date.strftime('%m') + '/' + date.strftime('%d') + '/*.fits')) 
 
@@ -42,7 +47,7 @@ for date in daterange(start_date, end_date):
                 bjd[n] 	= header['CCFJDMOD']
                 rv[n] 	= header['CCFRVMOD']*1000
                 σrv[n]	= header['DVRMSMOD']*1000
-                ccf_per_order   = hdulist[12].data
+                ccf_per_order   = hdulist[12].data                
                 ccf_per_obs     = np.sum(ccf_per_order, axis=0)
                 v_grid 	= header['CCFSTART'] + np.arange(len(ccf_per_obs))*header['CCFSTEP']
                 if n == 0:
@@ -50,10 +55,8 @@ for date in daterange(start_date, end_date):
                 else:
                     CCF = np.vstack((CCF, ccf_per_obs)) 
 
-                path = ('./data/' + date.strftime('%m') + '/' + date.strftime('%d'))
-                if not os.path.exists(path):
-                    os.makedirs(path)
-                    print('The new directory' + path + 'is created!')
+            np.savetxt(path + 'ccf_o_' + file_ccf[n][-27:-4] + 'ccf', ccf_per_order)
+            np.savetxt(path + 'CCF_' + date.strftime("%Y-%m-%d") + '.txt', CCF)
 
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
