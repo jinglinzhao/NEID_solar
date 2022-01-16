@@ -21,7 +21,7 @@ quality_df  = pd.read_csv('combined_rvs_1.csv')
 filenames   = [quality_df['Filename'][i][-27:] for i in range(len(quality_df))]
 
 start_date  = date(2020, 6, 1)
-end_date    = date(2020, 6, 1)
+end_date    = date(2020, 6, 30)
 
 start_time  = datetime.now()
 for date in daterange(start_date, end_date):
@@ -56,17 +56,9 @@ for date in daterange(start_date, end_date):
                         CCF = ccf_per_obs
                     else:
                         CCF = np.vstack((CCF, ccf_per_obs)) 
-
                 np.savetxt(path + '/' + file_ccf[n][-27:-4] + 'ccf', ccf_per_order)
                 np.savetxt('./data/' + date.strftime("%Y-%m-%d") + '.CCF', CCF)
             bar()
 
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
-
-idx     = bjd!=0
-bjd     = bjd[idx]
-rv      = rv[idx]
-σrv     = σrv[idx]
-CCF     = CCF       #(N_file, N_v)
-N_file  = len(bjd)  # update N_file
