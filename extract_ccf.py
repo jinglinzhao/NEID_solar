@@ -20,8 +20,8 @@ def daterange(start_date, end_date):
 quality_df  = pd.read_csv('combined_rvs_1.csv')
 filenames   = [quality_df['Filename'][i][-27:] for i in range(len(quality_df))]
 
-start_date  = date(2020, 6, 7)
-end_date    = date(2020, 6, 30)
+start_date  = date(2020, 1, 1)
+end_date    = date(2020, 5, 31)
 
 start_time  = datetime.now()
 for single_date in daterange(start_date, end_date):
