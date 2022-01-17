@@ -20,20 +20,20 @@ def daterange(start_date, end_date):
 quality_df  = pd.read_csv('combined_rvs_1.csv')
 filenames   = [quality_df['Filename'][i][-27:] for i in range(len(quality_df))]
 
-start_date  = date(2020, 6, 1)
+start_date  = date(2020, 6, 7)
 end_date    = date(2020, 6, 30)
 
 start_time  = datetime.now()
-for date in daterange(start_date, end_date):
+for single_date in daterange(start_date, end_date):
 
-    print(date.strftime("%Y-%m-%d"))
-    path = ('./data/' + date.strftime('%m') + '/' + date.strftime('%d'))
+    print(single_date.strftime("%Y-%m-%d"))
+    path = ('./data/' + single_date.strftime('%m') + '/' + single_date.strftime('%d'))
     if not os.path.exists(path):
         os.makedirs(path)
         print('The new directory ' + path + ' is created!')
 
     file_ccf = sorted(glob.glob('/gpfs/group/ebf11/default/pipeline/data/neid_solar/v1.1/L2/2021/' + \
-                                date.strftime('%m') + '/' + date.strftime('%d') + '/*.fits')) 
+                                single_date.strftime('%m') + '/' + single_date.strftime('%d') + '/*.fits')) 
 
     N_file		= len(file_ccf)
     bjd 		= np.zeros(N_file)
@@ -52,12 +52,12 @@ for date in daterange(start_date, end_date):
                     ccf_per_order   = hdulist[12].data                
                     ccf_per_obs     = np.sum(ccf_per_order, axis=0)
                     v_grid 	= header['CCFSTART'] + np.arange(len(ccf_per_obs))*header['CCFSTEP']
-                    if n == 0:
+                    if not np.any(CCF):
                         CCF = ccf_per_obs
                     else:
                         CCF = np.vstack((CCF, ccf_per_obs)) 
                 np.savetxt(path + '/' + file_ccf[n][-27:-4] + 'ccf', ccf_per_order)
-                np.savetxt('./data/' + date.strftime("%Y-%m-%d") + '.CCF', CCF)
+                np.savetxt('./data/' + single_date.strftime("%Y-%m-%d") + '.CCF', CCF)
             bar()
 
 end_time = datetime.now()
