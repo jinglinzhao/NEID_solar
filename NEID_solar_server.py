@@ -20,7 +20,7 @@ import shutil
 file_ccf	= sorted(glob.glob('/gpfs/group/ebf11/default/pipeline/data/neid_solar/v1.1/L2/2021/06/01/*.fits')) 
 quality_df  = pd.read_csv('combined_rvs_1.csv')
 
-filenames = [quality_df['Filename'][i][-27:] for i in range(len(quality_df))]
+filenames 	= [quality_df['Filename'][i][-27:] for i in range(len(quality_df))]
 
 N_file		= len(file_ccf)
 bjd 		= np.zeros(N_file)

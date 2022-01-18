@@ -54,8 +54,10 @@ for n in range(N_file):
 	σCCF[:,n] /= np.median(CCF[:,n])
 	CCF[:,n] /= np.median(CCF[:,n])
 
-# plt.plot(v_grid, CCF)
-# plt.show()
+plt.plot(v_grid, ccf[55:97,:].T, 'b')
+plt.plot(v_grid, ccf[0:55,:].T, 'k')
+plt.plot(v_grid, ccf[97:,:].T, 'k')
+plt.show()
 
 idx_ccf = (v_grid>=84.50) & (v_grid<=114.25)
 plt.plot(v_grid[idx_ccf], CCF[idx_ccf,:])
