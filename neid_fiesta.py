@@ -18,3 +18,4 @@ for single_date in daterange(start_date, end_date):
 
     print(single_date.strftime("%Y-%m-%d"))
     
+
