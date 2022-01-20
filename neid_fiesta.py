@@ -23,8 +23,8 @@ filenames   = [quality_df['Filename'][i][-27:] for i in range(len(quality_df))]
 path_prefix = '/gpfs/group/ebf11/default/pipeline/data/neid_solar/v1.1/outputs/jvz5625/'
 
 # parameters 
-start_date  = date(2020, 6, 1)
-end_date    = date(2020, 6, 10)
+start_date  = date(2020, 1, 1)
+end_date    = date(2020, 12, 31)
 plot        = False
 o_start     = 55    # 56 in Julia
 o_end       = 108   # 108 in Julia
