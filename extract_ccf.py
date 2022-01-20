@@ -19,6 +19,7 @@ def daterange(start_date, end_date):
 #--------------------------------------------------------------------
 quality_df  = pd.read_csv('combined_rvs_1.csv')
 filenames   = [quality_df['Filename'][i][-27:] for i in range(len(quality_df))]
+path_prefix = '/gpfs/group/ebf11/default/pipeline/data/neid_solar/v1.1/outputs/jvz5625/'
 
 start_date  = date(2020, 6, 22)
 end_date    = date(2020, 6, 30)
@@ -28,7 +29,6 @@ for single_date in daterange(start_date, end_date):
 
     print(single_date.strftime("%Y-%m-%d"))
 
-    path_prefix = '/gpfs/group/ebf11/default/pipeline/data/neid_solar/v1.1/outputs/jvz5625/'
     path = path_prefix + 'extracted_ccf/' + single_date.strftime('%m') + '/' + single_date.strftime('%d') + '/'
     if not os.path.exists(path):
         os.makedirs(path)
@@ -53,6 +53,8 @@ for single_date in daterange(start_date, end_date):
                     σrv[n]	= header['DVRMSMOD']*1000
                     ccf_per_order   = hdulist[12].data                
                     ccf_per_obs     = np.sum(ccf_per_order, axis=0)
+                    # header['CCFSTART'] = -100; 
+                    # header['CCFSTEP'] = 0.25
                     v_grid 	= header['CCFSTART'] + np.arange(len(ccf_per_obs))*header['CCFSTEP']
                     if not np.any(CCF):
                         CCF = ccf_per_obs
@@ -61,7 +63,7 @@ for single_date in daterange(start_date, end_date):
                 np.savetxt(path + file_ccf[n][-27:-4] + 'ccf', ccf_per_order)
             bar()
 
-    np.savetxt(path_prefix + 'ccf_by_day/' + single_date.strftime("%Y-%m-%d") + '.CCF', CCF)
+    np.savetxt(path_prefix + single_date.strftime("ccf_by_day/%Y-%m-%d.CCF"), CCF)
 
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
