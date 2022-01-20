@@ -72,3 +72,6 @@ for single_date in daterange(start_date, end_date):
                     plt.show()
 
         np.savetxt(path_prefix + single_date.strftime("ccf_by_day_56_108/%Y-%m-%d.CCF"), CCF)
+
+end_time = datetime.now()
+print('Duration: {}'.format(end_time - start_time))
