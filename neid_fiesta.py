@@ -63,7 +63,10 @@ for single_date in daterange(start_date, end_date):
 
             bar()
 
-# df, shift_spectrum, err_shift_spectrum, power_spectrum, err_power_spectrum, RV_gauss = FIESTA(v_grid[idx], CCF.T, σ_CCF.T)
+plt.plot(v_grid[idx], (1-CCF))
+plt.show()
+
+df, shift_spectrum, err_shift_spectrum, power_spectrum, err_power_spectrum, RV_gauss = FIESTA(v_grid[idx], (1-CCF).T, σ_CCF.T)
 
 
 
