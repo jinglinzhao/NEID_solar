@@ -23,8 +23,8 @@ filenames   = [quality_df['Filename'][i][-27:-5] for i in range(len(quality_df))
 path_prefix = '/gpfs/group/ebf11/default/pipeline/data/neid_solar/v1.1/outputs/jvz5625/'
 
 # parameters 
-start_date  = date(2020, 6, 1)
-end_date    = date(2020, 6, 30)
+start_date  = date(2020, 5, 26)
+end_date    = date(2020, 6, 25)
 plot        = False
 
 CCF, σ_CCF  = [], []
@@ -63,8 +63,8 @@ for single_date in daterange(start_date, end_date):
 
             bar()
 
-plt.plot(v_grid[idx], (1-CCF))
-plt.show()
+# plt.plot(v_grid[idx], (1-CCF))
+# plt.show()
 
 df, shift_spectrum, err_shift_spectrum, power_spectrum, err_power_spectrum, RV_gauss = FIESTA(v_grid[idx], (1-CCF).T, σ_CCF.T)
 

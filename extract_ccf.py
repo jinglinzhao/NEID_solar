@@ -53,9 +53,7 @@ for single_date in daterange(start_date, end_date):
                     σrv[n]	= header['DVRMSMOD']*1000
                     ccf_per_order   = hdulist[12].data                
                     ccf_per_obs     = np.sum(ccf_per_order, axis=0)
-                    # header['CCFSTART'] = -100; 
-                    # header['CCFSTEP'] = 0.25
-                    v_grid 	= header['CCFSTART'] + np.arange(len(ccf_per_obs))*header['CCFSTEP']
+                    v_grid 	= header['CCFSTART'] + np.arange(len(ccf_per_obs))*header['CCFSTEP']    # header['CCFSTART'] = -100; header['CCFSTEP'] = 0.25
                     if not np.any(CCF):
                         CCF = ccf_per_obs
                     else:
