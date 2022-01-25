@@ -28,7 +28,7 @@ path_prefix = '/gpfs/group/ebf11/default/pipeline/data/neid_solar/v1.1/outputs/j
 # end_date    = date(2020, 6, 25)
 start_date  = date(2020, 6, 23)
 end_date    = date(2020, 6, 23)
-plot        = True
+plot        = False
 o_start     = 55    # 56 in Julia
 o_end       = 108   # 108 in Julia
 o_exclude   = np.array([61, 66, 81, 90])
@@ -84,7 +84,7 @@ for single_date in daterange(start_date, end_date):
                     idx         = (continuum!=0)
                     plt.plot(v_grid, ccf_per_order[o_used, :][idx,:].T/continuum[idx], 'b', alpha=0.3)
 
-                    plt.xlim(90,110)
+                    plt.xlim(85,113)
                     # plt.savefig(single_date.strftime('./normalised_ccf_by_order/%m-%d.png'))
                     plt.show()
 
@@ -94,6 +94,9 @@ for single_date in daterange(start_date, end_date):
                     #     plt.show()
 
         np.savetxt(path_prefix + single_date.strftime("ccf_by_day_56_108/%Y-%m-%d.CCF"), CCF)
+        plt.plot(v_grid, CCF.T / np.median(CCF, axis=1))
+        plt.xlim(85,113)
+        plt.show()        
 
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
