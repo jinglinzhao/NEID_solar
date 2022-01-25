@@ -31,7 +31,7 @@ end_date    = date(2020, 6, 23)
 plot        = True
 o_start     = 55    # 56 in Julia
 o_end       = 108   # 108 in Julia
-o_exclude   = np.array([61, 81, 90])
+o_exclude   = np.array([61, 66, 81, 90])
 o_used      = np.array([x for x in np.arange(o_start, o_end) if (x in o_exclude) == False])
 
 
