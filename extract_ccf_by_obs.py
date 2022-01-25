@@ -28,7 +28,7 @@ path_prefix = '/gpfs/group/ebf11/default/pipeline/data/neid_solar/v1.1/outputs/j
 # end_date    = date(2020, 6, 25)
 # start_date  = date(2020, 6, 23)
 # end_date    = date(2020, 6, 23)
-start_date  = date(2020, 1, 1)
+start_date  = date(2020, 2, 14)
 end_date    = date(2020, 12, 31)
 
 plot        = False
@@ -97,9 +97,11 @@ for single_date in daterange(start_date, end_date):
                     #     plt.show()
 
         np.savetxt(path_prefix + single_date.strftime("ccf_by_day_56_108/%Y-%m-%d.CCF"), CCF)
-        plt.plot(v_grid, CCF.T / np.median(CCF, axis=1))
-        plt.xlim(85,113)
-        plt.show()        
+
+        if plot == True:
+            plt.plot(v_grid, CCF.T / np.median(CCF, axis=1))
+            plt.xlim(85,113)
+            plt.show()        
 
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
