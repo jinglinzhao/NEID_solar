@@ -100,3 +100,4 @@ for single_date in daterange(start_date, end_date):
 
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
+plt.close('all')
