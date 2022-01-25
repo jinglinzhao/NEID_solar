@@ -81,16 +81,16 @@ plt.show()
 #----------------------------------
 # Save data
 #----------------------------------
-np.savetxt('v_grid.txt', v_grid)
-np.savetxt('CCF.txt', CCF)
-np.savetxt('σ_CCF.txt', σ_CCF)
+np.savetxt('./data/v_grid.txt', v_grid)
+np.savetxt('./data/CCF.txt', CCF)
+np.savetxt('./data/σ_CCF.txt', σ_CCF)
 
 #----------------------------------
 # Read data
 #----------------------------------
-v_grid  = np.loadtxt('v_grid.txt')
-CCF     = np.loadtxt('CCF.txt')
-σ_CCF   = np.loadtxt('σ_CCF.txt')
+v_grid  = np.loadtxt('./data/v_grid.txt')
+CCF     = np.loadtxt('./data/CCF.txt')
+σ_CCF   = np.loadtxt('./data/σ_CCF.txt')
 
 #==============================================================================
 # Feed CCFs into FIESTA
@@ -113,8 +113,8 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
 
 fig, axes = plt.subplots(figsize=(15, 3))
 plt.gcf().subplots_adjust(bottom=0.2)
-plt.errorbar(bjd-2400000, rv-np.mean(rv), σrv, c='purple', marker='.', ls='none', alpha= 0.3, label='rv')
-plt.errorbar(bjd-2400000, RV_gauss-np.mean(RV_gauss), σrv, c='black', marker='.', ls='none', alpha= 0.3, label='RV_gauss')
+plt.errorbar(bjd-2400000, rv-np.mean(rv[:100]), σrv, c='purple', marker='.', ls='none', alpha= 0.3, label='rv')
+plt.errorbar(bjd-2400000, RV_gauss-np.mean(RV_gauss[:100]), σrv, c='black', marker='.', ls='none', alpha= 0.3, label='RV_gauss')
 plt.legend()
 plt.xlabel('BJD - 2400000 [d]')
 plt.ylabel('RV [m/s]')
@@ -122,8 +122,22 @@ plt.ylabel('RV [m/s]')
 plt.show()
 
 
+if 0:
+    dates = ["01/02/2020", "01/03/2020", "01/04/2020"]
+    x_values = [datetime.datetime.strptime(d,"%m/%d/%Y").date() for d in dates]
+    y_values = [1, 2, 3]
 
+    ax = plt.gca()
 
+    formatter = mdates.DateFormatter("%Y-%m-%d")
+
+    ax.xaxis.set_major_formatter(formatter)
+
+    locator = mdates.DayLocator()
+
+    ax.xaxis.set_major_locator(locator)
+
+    plt.plot(x_values, y_values)
 
 
 
