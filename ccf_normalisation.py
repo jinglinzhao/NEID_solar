@@ -32,7 +32,6 @@ path_prefix = '/gpfs/group/ebf11/default/pipeline/data/neid_solar/v1.1/outputs/j
 # end_date    = date(2020, 6, 23)
 start_date  = date(2020, 1, 1)
 end_date    = date(2020, 12, 31)
-# plot        = False
 
 CCF, σ_CCF  = [], []
 bjd, rv, σrv = np.array([]), np.array([]), np.array([])
@@ -68,7 +67,7 @@ for single_date in daterange(start_date, end_date):
                 rv      = np.append(rv, df['rv_drp']*1000)
                 σrv     = np.append(σrv, df['σrv_drp']*1000)
 
-            bar()
+                bar()
 
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
@@ -76,9 +75,6 @@ print('Duration: {}'.format(end_time - start_time))
 v_grid  = v_grid[idx]
 CCF     = (1-CCF).T
 σ_CCF   = σ_CCF.T
-
-plt.plot(v_grid, CCF)
-plt.show()
 
 #----------------------------------
 # Save data

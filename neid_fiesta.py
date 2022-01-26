@@ -5,6 +5,9 @@ v_grid  = np.loadtxt('./data/v_grid.txt')
 CCF     = np.loadtxt('./data/CCF.txt')
 σ_CCF   = np.loadtxt('./data/σ_CCF.txt')
 
+plt.plot(v_grid, CCF)
+plt.show()
+
 #==============================================================================
 # Feed CCFs into FIESTA
 #==============================================================================
