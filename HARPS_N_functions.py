@@ -46,7 +46,7 @@ def plot_all(k_mode, t, rv, erv, ind, eind, ts_xlabel, rv_xlabel, pe_xlabel, ind
 		plot_x = 1/frequency
 		idxx = (plot_x>plot_min_t) & (plot_x<time_span/2)
 		height = max(power[idxx])*height_ratio
-		ax.plot(plot_x[idxx], power[idxx], 'k-', label=r'$\xi$'+str(i+1), alpha=0.5)
+		ax.plot(plot_x[idxx], power[idxx], 'k-', alpha=0.5)
 		peaks, _ = find_peaks(power[idxx], height=height)
 		ax.plot(plot_x[idxx][peaks], power[idxx][peaks], "ro")
 
