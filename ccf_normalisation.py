@@ -26,12 +26,12 @@ filenames   = [quality_df['Filename'][i][-27:-5] for i in range(len(quality_df))
 path_prefix = '/gpfs/group/ebf11/default/pipeline/data/neid_solar/v1.1/outputs/jvz5625/'
 
 # parameters 
-# start_date  = date(2020, 5, 26)
-# end_date    = date(2020, 6, 25)
+start_date  = date(2020, 5, 26)
+end_date    = date(2020, 6, 25)
 # start_date  = date(2020, 6, 23)
 # end_date    = date(2020, 6, 23)
-start_date  = date(2020, 1, 1)
-end_date    = date(2020, 12, 31)
+# start_date  = date(2020, 1, 1)
+# end_date    = date(2020, 12, 31)
 
 CCF, σ_CCF  = [], []
 bjd, rv, σrv = np.array([]), np.array([]), np.array([])
@@ -79,11 +79,18 @@ CCF     = (1-CCF).T
 #----------------------------------
 # Save data
 #----------------------------------
-np.savetxt('./data/v_grid.txt', v_grid)
-np.savetxt('./data/CCF.txt', CCF)
-np.savetxt('./data/σ_CCF.txt', σ_CCF)
+if 0:
+    np.savetxt('./data/v_grid.txt', v_grid)
+    np.savetxt('./data/CCF.txt', CCF)
+    np.savetxt('./data/σ_CCF.txt', σ_CCF)
+    np.savetxt('./data/bjd.txt', bjd)
+    np.savetxt('./data/rv.txt', rv)
+    np.savetxt('./data/σrv.txt', σrv)
 
-
-
-
-
+if 1: 
+    np.savetxt('./data_526_625/v_grid.txt', v_grid)
+    np.savetxt('./data_526_625/CCF.txt', CCF)
+    np.savetxt('./data_526_625/σ_CCF.txt', σ_CCF)
+    np.savetxt('./data_526_625/bjd.txt', bjd)
+    np.savetxt('./data_526_625/rv.txt', rv)
+    np.savetxt('./data_526_625/σrv.txt', σrv)

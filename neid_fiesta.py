@@ -1,9 +1,16 @@
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+from FIESTA_functions import *
+from HARPS_N_functions import *
+
 #----------------------------------
 # Read data
 #----------------------------------
-v_grid  = np.loadtxt('./data/v_grid.txt')
-CCF     = np.loadtxt('./data/CCF.txt')
-σ_CCF   = np.loadtxt('./data/σ_CCF.txt')
+v_grid  = np.loadtxt('./data_526_625/v_grid.txt')
+CCF     = np.loadtxt('./data_526_625/CCF.txt')
+σ_CCF   = np.loadtxt('./data_526_625/σ_CCF.txt')
 
 plt.plot(v_grid, CCF)
 plt.show()
