@@ -99,8 +99,28 @@ plot_all(k_mode=6, t=bjd[idx_bjd], rv=rv[idx_bjd], erv=σrv[idx_bjd],
     ind_yalbel=r'$A$',
     file_name='./figure/' + 'Amplitude_time-series_correlation_periodogram_NEID.pdf')
 
+plot_all(k_mode=6, t=bjd[idx_bjd], rv=rv[idx_bjd], erv=σrv[idx_bjd],  
+    ind=shift_function[:,idx_bjd], eind=err_shift_spectrum[:,idx_bjd], 
+    ts_xlabel='BJD - 2400000 [d]', 
+    rv_xlabel='$RV_{HARPS}$', 
+    pe_xlabel='Period [days]',
+    ind_yalbel=r'$\Delta RV$',
+    file_name='./figure/' + 'shift_time-series_correlation_periodogram_SCALPELS.pdf')
+plt.show()
 
 
+import pandas as pd
+quality_df  = pd.read_csv('combined_rvs_1.csv')
+plt.rcParams.update({'font.size': 14})
+fig, axes = plt.subplots(figsize=(15, 3))
+alpha=0.3
+plt.plot(bjd-2400000, quality_df['CaIIHK'], '.', label='CaIIHK',alpha=alpha)
+plt.plot(bjd-2400000, quality_df['Ha06_1'], '.', label='Ha06_1',alpha=alpha)
+plt.plot(bjd-2400000, quality_df['Ha06_2'], '.', label='Ha06_2',alpha=alpha)
+plt.plot(bjd-2400000, quality_df['Ha06_3'], '.', label='Ha06_3',alpha=alpha)
+xlabel='BJD - 2400000 [d]'
+plt.legend()
+plt.show()
 
 #==============================================================================
 # Testing
