@@ -38,7 +38,7 @@ o_end       = 108   # 108 in julia
 o_exclude   = 173 - np.array([66, 67, 68, 74, 76, 83, 118]) # version 2; index starting from 0
 o_used      = np.array([x for x in np.arange(o_start, o_end) if (x in o_exclude) == False])
 
-v_grid      = -100 + np.arange(ccf_per_order.shape[1])*0.25
+v_grid      = -100 + np.arange(1604)*0.25
 idx_v       = (v_grid>87) & (v_grid<111)
 
 CCF, σ_CCF                      = [], []
