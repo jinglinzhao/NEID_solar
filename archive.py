@@ -27,21 +27,6 @@ quality_df  = pd.read_csv('combined_rvs_1.csv')
 rv_by_order = quality_df.iloc[:,75::2].values
 σrv_by_order = quality_df.iloc[:,76::2].values
 
-def weighted_avg_and_std(values, weights):
-    """
-    Return the weighted average and standard deviation.
-
-    values, weights -- Numpy ndarrays with the same shape.
-    """
-    average = np.average(values, weights=weights, axis=1)
-    # Fast and numerically precise:
-    variance = np.average(((np.subtract(values.T,average))**2).T, weights=weights, axis=1)
-    return (average, np.sqrt(variance))
-
-ave, rms_by_obs = weighted_avg_and_std(values=rv_by_order, weights=1/σrv_by_order**2)
-
-
-
 filenames   = [quality_df['Filename'][i][-27:-5] for i in range(len(quality_df))]
 path_prefix = '/gpfs/group/ebf11/default/pipeline/data/neid_solar/v1.1/outputs/jvz5625/'
 

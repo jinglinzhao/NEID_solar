@@ -26,18 +26,25 @@ path_prefix = '/gpfs/group/ebf11/default/pipeline/data/neid_solar/v1.1/outputs/j
 # parameters 
 # start_date  = date(2020, 5, 26)
 # end_date    = date(2020, 6, 25)
-# start_date  = date(2020, 6, 23)
-# end_date    = date(2020, 6, 23)
-start_date  = date(2020, 2, 14)
-end_date    = date(2020, 12, 31)
+start_date  = date(2020, 6, 23)
+end_date    = date(2020, 6, 23)
+# start_date  = date(2020, 2, 14)
+# end_date    = date(2020, 12, 31)
 
 plot        = True
 o_start     = 55    # 56 in Julia
-o_end       = 108   # 108 in m
+o_end       = 108   # 108 in julia
 # o_exclude   = np.array([61, 66, 81, 90]) -> version 1
 o_exclude   = 173 - np.array([66, 67, 68, 74, 76, 83, 118]) # version 2; index starting from 0
 o_used      = np.array([x for x in np.arange(o_start, o_end) if (x in o_exclude) == False])
 
+v_grid      = -100 + np.arange(ccf_per_order.shape[1])*0.25
+idx_v       = (v_grid>87) & (v_grid<111)
+
+CCF, σ_CCF                      = [], []
+bjd, rv, σrv                    = np.array([]), np.array([]), np.array([])
+CCF_daily, σ_CCF_daily          = [], []
+bjd_daily, rv_daily, σrv_daily  = np.array([]), np.array([]), np.array([])
 
 start_time  = datetime.now()
 for single_date in daterange(start_date, end_date):
@@ -53,28 +60,34 @@ for single_date in daterange(start_date, end_date):
         os.makedirs(path_save)
 
     if N_file != 0:
-        CCF = []
+
         with alive_bar(N_file) as bar:
+
             for n in range(N_file):
                 ccf_per_order   = np.loadtxt(file_ccf[n])
-                v_grid          = -100 + np.arange(ccf_per_order.shape[1])*0.25
-                idx             = (v_grid>85) & (v_grid<113)
+
                 for order in o_used:
                     if ccf_per_order[order, :].all() == 0:
                         continue
                     else:
-                        reg                     = LinearRegression().fit(v_grid[~idx].reshape(-1,1), ccf_per_order[order, ~idx])
+                        reg                     = LinearRegression().fit(v_grid[~idx_v].reshape(-1,1), ccf_per_order[order, ~idx_v])
                         fitted_continuum        = reg.predict(v_grid.reshape(-1,1))
                         ccf_per_order[order, :] = ccf_per_order[order, :] / fitted_continuum * np.median(fitted_continuum)
 
                 ccf_per_obs   = np.sum(ccf_per_order[o_used, :], axis=0)
 
-                np.savetxt(path_save + file_ccf[n][-27:-4] + '.ccf', ccf_per_obs)
+                # np.savetxt(path_save + file_ccf[n][-27:-4] + '.ccf', ccf_per_obs)
 
                 if not np.any(CCF):
-                    CCF = ccf_per_obs
+                    CCF = ccf_per_obs #(1604,)
                 else:
-                    CCF = np.vstack((CCF, ccf_per_obs)) 
+                    CCF = np.vstack((CCF, ccf_per_obs)) # e.g.(53, 1604)
+
+                df      = quality_df[quality_df['Filename'].str.contains(file_ccf[n][-26:-4])]
+                bjd     = np.append(bjd, df['jd_drp'])
+                rv      = np.append(rv, df['rv_drp']*1000)
+                σrv     = np.append(σrv, df['σrv_drp']*1000)
+
                 bar()
 
                 if (n==0) & (plot==True): # only plot once
@@ -91,18 +104,26 @@ for single_date in daterange(start_date, end_date):
 
                     for i in range(ccf_per_order.shape[0]):
                         plt.plot(v_grid, ccf_per_order[i,:])
-                        plt.title('julia index' + str(i+1) + ' / order ' + str(174-i-1))
+                        plt.title('Julia index' + str(i+1) + ' / order ' + str(174-i-1))
                         plt.show()
-
-        if plot==True:
-            plt.plot(v_grid, CCF.T / np.median(CCF, axis=1))
-            plt.xlim(85,113)
-            plt.show()
-
-        # np.savetxt(path_prefix + single_date.strftime("ccf_by_day_56_108/%Y-%m-%d.CCF"), CCF)
-
-
 
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
+
+#----------------------------------
+# Save data
+#----------------------------------
+σ_CCF   = (CCF.T**0.5 / np.median(CCF[:,~idx_v], axis=1)).T
+CCF     = (CCF.T / np.median(CCF[:,~idx_v], axis=1)).T[:,idx_v] # normalisation 
+
+np.savetxt('./data/v_grid.txt', v_grid)
+np.savetxt('./data/CCF.txt', CCF)
+np.savetxt('./data/σ_CCF.txt', σ_CCF)
+np.savetxt('./data/bjd.txt', bjd)
+np.savetxt('./data/rv.txt', rv)
+np.savetxt('./data/σrv.txt', σrv)
+
+plt.plot(v_grid[idx_v], CCF.T)
+plt.show()
+
 plt.close('all')
