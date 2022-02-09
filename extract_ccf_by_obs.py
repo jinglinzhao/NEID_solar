@@ -26,12 +26,12 @@ path_prefix = '/gpfs/group/ebf11/default/pipeline/data/neid_solar/v1.1/outputs/j
 # parameters 
 # start_date  = date(2020, 5, 26)
 # end_date    = date(2020, 6, 25)
-start_date  = date(2020, 6, 23)
-end_date    = date(2020, 6, 23)
-# start_date  = date(2020, 2, 14)
-# end_date    = date(2020, 12, 31)
+# start_date  = date(2020, 6, 23)
+# end_date    = date(2020, 6, 23)
+start_date  = date(2020, 1, 1)
+end_date    = date(2020, 12, 31)
 
-plot        = True
+plot        = False
 o_start     = 55    # 56 in Julia
 o_end       = 108   # 108 in julia
 # o_exclude   = np.array([61, 66, 81, 90]) -> version 1
@@ -55,9 +55,9 @@ for single_date in daterange(start_date, end_date):
     file_ccf    = sorted(glob.glob(path + '/*.ccf')) 
     N_file      = len(file_ccf)
 
-    path_save   = path_prefix + single_date.strftime('ccf_by_obs_56_108/%m/%d/')
-    if not os.path.exists(path_save):
-        os.makedirs(path_save)
+    # path_save   = path_prefix + single_date.strftime('ccf_by_obs_56_108/%m/%d/')
+    # if not os.path.exists(path_save):
+    #     os.makedirs(path_save)
 
     if N_file != 0:
 
