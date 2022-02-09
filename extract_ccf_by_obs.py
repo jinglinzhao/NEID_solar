@@ -31,10 +31,11 @@ path_prefix = '/gpfs/group/ebf11/default/pipeline/data/neid_solar/v1.1/outputs/j
 start_date  = date(2020, 2, 14)
 end_date    = date(2020, 12, 31)
 
-plot        = False
+plot        = True
 o_start     = 55    # 56 in Julia
-o_end       = 108   # 108 in Julia
-o_exclude   = np.array([61, 66, 81, 90])
+o_end       = 108   # 108 in m
+# o_exclude   = np.array([61, 66, 81, 90]) -> version 1
+o_exclude   = 173 - np.array([66, 67, 68, 74, 76, 83, 118]) # version 2; index starting from 0
 o_used      = np.array([x for x in np.arange(o_start, o_end) if (x in o_exclude) == False])
 
 
@@ -56,27 +57,27 @@ for single_date in daterange(start_date, end_date):
         with alive_bar(N_file) as bar:
             for n in range(N_file):
                 ccf_per_order   = np.loadtxt(file_ccf[n])
-                v_grid          = -100 + np.arange(1604)*0.25
+                v_grid          = -100 + np.arange(ccf_per_order.shape[1])*0.25
                 idx             = (v_grid>85) & (v_grid<113)
                 for order in o_used:
                     if ccf_per_order[order, :].all() == 0:
                         continue
                     else:
-                        reg = LinearRegression().fit(v_grid[~idx].reshape(-1,1), ccf_per_order[order, ~idx])
-                        fitted_continuum = reg.predict(v_grid.reshape(-1,1))
+                        reg                     = LinearRegression().fit(v_grid[~idx].reshape(-1,1), ccf_per_order[order, ~idx])
+                        fitted_continuum        = reg.predict(v_grid.reshape(-1,1))
                         ccf_per_order[order, :] = ccf_per_order[order, :] / fitted_continuum * np.median(fitted_continuum)
 
                 ccf_per_obs   = np.sum(ccf_per_order[o_used, :], axis=0)
 
                 np.savetxt(path_save + file_ccf[n][-27:-4] + '.ccf', ccf_per_obs)
+
                 if not np.any(CCF):
                     CCF = ccf_per_obs
                 else:
                     CCF = np.vstack((CCF, ccf_per_obs)) 
                 bar()
 
-                if plot == True:
-                    v_grid  = -100 + np.arange(len(ccf_per_obs))*0.25
+                if (n==0) & (plot==True): # only plot once
                 
                     ccf_per_order_reject = np.vstack((ccf_per_order[0:o_start, :], ccf_per_order[o_end:, :]))
                     continuum   = np.mean(ccf_per_order_reject, axis=1)
@@ -86,22 +87,21 @@ for single_date in daterange(start_date, end_date):
                     continuum   = np.mean(ccf_per_order[o_used, :], axis=1)
                     idx         = (continuum!=0)
                     plt.plot(v_grid, ccf_per_order[o_used, :][idx,:].T/continuum[idx], 'b', alpha=0.3)
-
-                    plt.xlim(85,113)
-                    # plt.savefig(single_date.strftime('./normalised_ccf_by_order/%m-%d.png'))
                     plt.show()
 
-                    # for i in range(ccf_per_order.shape[0]):
-                    #     plt.plot(v_grid, ccf_per_order[i,:])
-                    #     plt.title(str(i+1))
-                    #     plt.show()
+                    for i in range(ccf_per_order.shape[0]):
+                        plt.plot(v_grid, ccf_per_order[i,:])
+                        plt.title('julia index' + str(i+1) + ' / order ' + str(174-i-1))
+                        plt.show()
 
-        np.savetxt(path_prefix + single_date.strftime("ccf_by_day_56_108/%Y-%m-%d.CCF"), CCF)
-
-        if plot == True:
+        if plot==True:
             plt.plot(v_grid, CCF.T / np.median(CCF, axis=1))
             plt.xlim(85,113)
-            plt.show()        
+            plt.show()
+
+        # np.savetxt(path_prefix + single_date.strftime("ccf_by_day_56_108/%Y-%m-%d.CCF"), CCF)
+
+
 
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
