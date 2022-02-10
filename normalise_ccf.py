@@ -42,9 +42,9 @@ o_used      = np.array([x for x in np.arange(o_start, o_end) if (x in o_exclude)
 v_grid      = -100 + np.arange(1604)*0.25
 idx_v       = (v_grid>87) & (v_grid<111)
 
-CCF, σ_CCF                      = [], []
+CCF, σCCF                       = [], []
 bjd, rv, σrv                    = np.array([]), np.array([]), np.array([])
-CCF_daily, σ_CCF_daily          = [], []
+CCF_daily, σCCF_daily           = [], []
 bjd_daily, rv_daily, σrv_daily  = np.array([]), np.array([]), np.array([])
 
 start_time  = datetime.now()
@@ -96,11 +96,11 @@ for single_date in daterange(start_date, end_date):
                     ccf_per_order_reject = np.vstack((ccf_per_order[0:o_start, :], ccf_per_order[o_end:, :]))
                     continuum   = np.mean(ccf_per_order_reject, axis=1)
                     idx         = (continuum!=0)
-                    plt.plot(v_grid, ccf_per_order_reject[idx,:].T/continuum[idx], 'r', alpha=0.3)
+                    plt.plot(v_grid, ccf_per_order_reject[idx,:].T/continuum[idx], 'r', alpha=0.1)
 
                     continuum   = np.mean(ccf_per_order[o_used, :], axis=1)
                     idx         = (continuum!=0)
-                    plt.plot(v_grid, ccf_per_order[o_used, :][idx,:].T/continuum[idx], 'b', alpha=0.3)
+                    plt.plot(v_grid, ccf_per_order[o_used, :][idx,:].T/continuum[idx], 'b', alpha=0.1)
                     plt.show()
 
                     for i in range(ccf_per_order.shape[0]):
@@ -114,26 +114,26 @@ print('Duration: {}'.format(end_time - start_time))
 #----------------------------------
 # Save data
 #----------------------------------
-σ_CCF   = (CCF.T**0.5 / np.median(CCF[:,~idx_v], axis=1)).T
-CCF     = (CCF.T / np.median(CCF[:,~idx_v], axis=1)).T[:,idx_v] # normalisation 
+σCCF    = CCF[:,idx_v].T**0.5 / np.median(CCF[:,~idx_v], axis=1)
+CCF     = 1 - CCF[:,idx_v].T / np.median(CCF[:,~idx_v], axis=1)     # normalisation 
 
 if 0: 
     np.savetxt('./data/v_grid.txt', v_grid)
     np.savetxt('./data/CCF.txt', CCF)
-    np.savetxt('./data/σ_CCF.txt', σ_CCF)
+    np.savetxt('./data/σCCF.txt', σCCF)
     np.savetxt('./data/bjd.txt', bjd)
     np.savetxt('./data/rv.txt', rv)
     np.savetxt('./data/σrv.txt', σrv)
 
 if 1:
-    np.savetxt('./data_v3/v_grid.txt', v_grid)
+    np.savetxt('./data_v3/v_grid.txt', v_grid[idx_v])
     np.savetxt('./data_v3/CCF.txt', CCF)
-    np.savetxt('./data_v3/σ_CCF.txt', σ_CCF)
+    np.savetxt('./data_v3/σCCF.txt', σCCF)
     np.savetxt('./data_v3/bjd.txt', bjd)
     np.savetxt('./data_v3/rv.txt', rv)
     np.savetxt('./data_v3/σrv.txt', σrv)
 
-plt.plot(v_grid[idx_v], CCF.T)
+plt.plot(v_grid[idx_v], CCF)
 plt.show()
 
 plt.close('all')
