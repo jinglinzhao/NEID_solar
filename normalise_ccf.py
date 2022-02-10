@@ -34,8 +34,9 @@ end_date    = date(2020, 12, 31)
 plot        = False
 o_start     = 55    # 56 in Julia
 o_end       = 108   # 108 in julia
-# o_exclude   = np.array([61, 66, 81, 90]) -> version 1
-o_exclude   = 173 - np.array([66, 67, 68, 74, 76, 83, 118]) # version 2; index starting from 0
+# o_exclude   = np.array([61, 66, 81, 90]) -> version 1 (data_v1)
+# o_exclude   = 173 - np.array([66, 67, 68, 74, 76, 83, 118]) # -> version 2 (data); index starting from 0
+o_exclude   = 173 - np.array([66, 67, 68, 69, 73, 74, 75, 76, 83, 118]) # -> version 3 (data_v3); index starting from 0
 o_used      = np.array([x for x in np.arange(o_start, o_end) if (x in o_exclude) == False])
 
 v_grid      = -100 + np.arange(1604)*0.25
@@ -116,12 +117,21 @@ print('Duration: {}'.format(end_time - start_time))
 σ_CCF   = (CCF.T**0.5 / np.median(CCF[:,~idx_v], axis=1)).T
 CCF     = (CCF.T / np.median(CCF[:,~idx_v], axis=1)).T[:,idx_v] # normalisation 
 
-np.savetxt('./data/v_grid.txt', v_grid)
-np.savetxt('./data/CCF.txt', CCF)
-np.savetxt('./data/σ_CCF.txt', σ_CCF)
-np.savetxt('./data/bjd.txt', bjd)
-np.savetxt('./data/rv.txt', rv)
-np.savetxt('./data/σrv.txt', σrv)
+if 0: 
+    np.savetxt('./data/v_grid.txt', v_grid)
+    np.savetxt('./data/CCF.txt', CCF)
+    np.savetxt('./data/σ_CCF.txt', σ_CCF)
+    np.savetxt('./data/bjd.txt', bjd)
+    np.savetxt('./data/rv.txt', rv)
+    np.savetxt('./data/σrv.txt', σrv)
+
+if 1:
+    np.savetxt('./data_v3/v_grid.txt', v_grid)
+    np.savetxt('./data_v3/CCF.txt', CCF)
+    np.savetxt('./data_v3/σ_CCF.txt', σ_CCF)
+    np.savetxt('./data_v3/bjd.txt', bjd)
+    np.savetxt('./data_v3/rv.txt', rv)
+    np.savetxt('./data_v3/σrv.txt', σrv)
 
 plt.plot(v_grid[idx_v], CCF.T)
 plt.show()
