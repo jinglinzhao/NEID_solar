@@ -32,11 +32,12 @@ start_date  = date(2020, 1, 1)
 end_date    = date(2020, 12, 31)
 
 plot        = False
-o_start     = 55    # 56 in Julia
-o_end       = 108   # 108 in julia
+o_start     = 55    # 56 in Julia (physical 118)
+o_end       = 108   # 108 in julia (physical 65)
 # o_exclude   = np.array([61, 66, 81, 90]) -> version 1 (data_v1)
 # o_exclude   = 173 - np.array([66, 67, 68, 74, 76, 83, 118]) # -> version 2 (data); index starting from 0
-o_exclude   = 173 - np.array([66, 67, 68, 69, 73, 74, 75, 76, 83, 118]) # -> version 3 (data_v3); index starting from 0
+# o_exclude   = 173 - np.array([66, 67, 68, 69, 73, 74, 75, 76, 83, 118]) # -> version 3 (data_v3); index starting from 0
+o_exclude   = 173 - np.array([66, 67, 68, 69, 73, 74, 75, 76, 78, 83, 107,108,112,113,117, 118]) # -> version 4 (data_v4);
 o_used      = np.array([x for x in np.arange(o_start, o_end) if (x in o_exclude) == False])
 
 v_grid      = -100 + np.arange(1604)*0.25
@@ -126,12 +127,12 @@ if 0:
     np.savetxt('./data/σrv.txt', σrv)
 
 if 1:
-    np.savetxt('./data_v3/v_grid.txt', v_grid[idx_v])
-    np.savetxt('./data_v3/CCF.txt', CCF)
-    np.savetxt('./data_v3/σCCF.txt', σCCF)
-    np.savetxt('./data_v3/bjd.txt', bjd)
-    np.savetxt('./data_v3/rv.txt', rv)
-    np.savetxt('./data_v3/σrv.txt', σrv)
+    np.savetxt('./data_v4/v_grid.txt', v_grid[idx_v])
+    np.savetxt('./data_v4/CCF.txt', CCF)
+    np.savetxt('./data_v4/σCCF.txt', σCCF)
+    np.savetxt('./data_v4/bjd.txt', bjd)
+    np.savetxt('./data_v4/rv.txt', rv)
+    np.savetxt('./data_v4/σrv.txt', σrv)
 
 plt.plot(v_grid[idx_v], CCF)
 plt.show()
