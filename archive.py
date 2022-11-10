@@ -99,3 +99,102 @@ if 0:
     np.savetxt('./data_526_625/bjd.txt', bjd)
     np.savetxt('./data_526_625/rv.txt', rv)
     np.savetxt('./data_526_625/σrv.txt', σrv)
+    
+
+
+
+    
+    
+def ts_statistics(t, y, yerr):
+    '''
+        refer to Timeseries Statistics
+    '''
+    gp = GP(t, y, yerr)
+
+    ###############
+    # time series #
+    ###############
+    fig = plt.figure(figsize=(18, 3))
+    plt.subplots_adjust(right=0.85, hspace=0.3)
+    plt.rcParams.update({'font.size': 14})
+
+    ## Upper panel    
+    # plt.title(str(date)[:10])
+    plt.errorbar(t, y, yerr=yerr, fmt=".k", capsize=0)
+    x = np.linspace(min(t), max(t), 1000)
+    pred_mean, pred_var = GP(t, y, yerr).predict(y, x, return_var=True)
+    pred_std = np.sqrt(pred_var)        
+    plt.plot(x, pred_mean, color='r', alpha=0.3)
+    plt.fill_between(x, pred_mean+pred_std, pred_mean-pred_std, color='r', alpha=0.1,
+                     edgecolor="none")
+    plt.xlabel("Time [min]")
+    plt.ylabel("RV [m/s]")
+
+    ## Correlation statistics
+    fig = plt.figure(figsize=(18, 3))
+    spacing, diff = corr(t, y)
+    plt.plot(spacing, diff, 'k.', alpha=0.3)        
+    plt.xlabel(r'$\Delta$T [min]')
+    plt.ylabel(r'$\Delta$RV [m/s]')
+
+    plt.show()
+
+    
+    w_ave, w_std = moving_std(spacing, diff, width=0.02)
+    
+    ###################
+    # Plot statistics #
+    ###################
+    fig = plt.figure(figsize=(18, 3))
+    plt.title('all data')
+    plt.plot(spacing, w_std, 'r.', alpha=0.5)
+    plt.xlabel(r'$\Delta$T [min]')
+    plt.ylabel('std [m/s]')
+    # plt.plot(spacing, w_ave, 'b.', alpha=0.5)
+    plt.show()
+
+    fig = plt.figure(figsize=(18, 3))
+    plt.title('zoom in')
+    plt.plot(spacing, diff, 'k.')
+    plt.plot(spacing, w_std, 'r.')
+    plt.xlabel(r'$\Delta$T [min]')
+    plt.ylabel('std [m/s]')
+    plt.xlim(1.5,1.6)
+
+    fig = plt.figure(figsize=(18, 3))
+    plt.title('zoom out')
+    plt.plot(spacing, diff, 'k.')
+    plt.plot(spacing, w_std, 'r.')
+    plt.xlabel(r'$\Delta$T [min]')
+    plt.ylabel('std [m/s]')
+    # plt.xlim(100, 110)
+    plt.xlim(10, 20)
+    plt.show()
+    
+    ###############
+    # Periodogram #
+    ###############
+    from astropy.timeseries import LombScargle
+
+    plt.subplots(figsize=(15, 3))
+    plt.rcParams.update({'font.size': 14})
+    frequency, power = LombScargle(spacing, w_std).autopower(minimum_frequency=0.1, maximum_frequency=1, samples_per_peak=10)        
+    plt.plot(1/frequency, power, 'r', alpha=0.5, label='corr std')
+    frequency, power = LombScargle(t, y).autopower(minimum_frequency=0.1, maximum_frequency=1, samples_per_peak=10)
+    plt.plot(1/frequency, power, 'k', alpha=0.5, label='time series')
+    plt.ylabel('Power')
+    plt.xlabel('Period [min]')
+    plt.legend()
+    plt.show()
+
+    plt.subplots(figsize=(15, 3))
+    plt.rcParams.update({'font.size': 14})
+    frequency, power = LombScargle(spacing, w_std).autopower(minimum_frequency=0.005, maximum_frequency=1, samples_per_peak=10)        
+    plt.plot(1/frequency, power, 'r', alpha=0.5, label='corr std')
+    frequency, power = LombScargle(t, y).autopower(minimum_frequency=0.1, maximum_frequency=1, samples_per_peak=10)
+    plt.plot(1/frequency, power, 'k', alpha=0.5, label='time series')
+    plt.ylabel('Power')
+    plt.xlabel('Period [min]')
+    plt.legend()
+    plt.xscale('log')
+    plt.show()    
