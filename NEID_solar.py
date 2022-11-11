@@ -1,19 +1,21 @@
-import numpy as np
-import os
-import glob
-from astropy.io import fits
-import matplotlib.pyplot as plt
-from scipy.optimize import curve_fit
-from scipy.interpolate import interp1d
-import matplotlib.pyplot as plt
-from scipy import stats
 import copy
+import glob
+import os
 import sys
+
+import matplotlib.pyplot as plt
+import numpy as np
+from astropy.io import fits
+from scipy import stats
+from scipy.interpolate import interp1d
+from scipy.optimize import curve_fit
+
 sys.path.append("../")
-from FIESTA_functions import *
-import pandas as pd
 import shutil
 
+import pandas as pd
+
+from FIESTA_functions import *
 
 #--------------------------------------------------------------------
 # import data 
@@ -206,6 +208,7 @@ plt.show()
 # Periodogram 
 #----------------------------
 from astropy.timeseries import LombScargle
+
 frequency, power = LombScargle((bjd-bjd[0])*24*60, rv, σrv).autopower()
 plt.plot(frequency, power)
 plt.xlabel('$f$ [1/min]')
@@ -248,6 +251,7 @@ plt.show()
 #----------------------------
 t_minute = (bjd-bjd[0])*24*60
 from sklearn.linear_model import LinearRegression
+
 k_mode 	= 5
 alpha1, alpha2 = [0.5,0.2]
 widths 	= [8,1]
