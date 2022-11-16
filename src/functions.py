@@ -67,7 +67,7 @@ def plot_all(k_mode, t, rv, erv, ind, eind, ts_xlabel, rv_xlabel, pe_xlabel, ind
 													   samples_per_peak=spp)
 
 		plot_x = 1/frequency
-		idxx = (plot_x>plot_min_t) & (plot_x<time_span/2)
+		idxx = (plot_x>plot_min_t) & (plot_x<time_span)
 		height = max(power[idxx])*height_ratio
 		ax.plot(plot_x[idxx], power[idxx], 'k-', alpha=0.5)
 		peaks, _ = find_peaks(power[idxx], height=height)
@@ -76,7 +76,7 @@ def plot_all(k_mode, t, rv, erv, ind, eind, ts_xlabel, rv_xlabel, pe_xlabel, ind
 		for n in range(len(plot_x[idxx][peaks])):
 			ax.text(plot_x[idxx][peaks][n], power[idxx][peaks][n], '%.1f' % plot_x[idxx][peaks][n], fontsize=10)
 
-		ax.set_xlim([plot_min_t,time_span/2])
+		ax.set_xlim([plot_min_t,time_span])
 		ax.set_ylim([0, 1.25*max(power[idxx])])
 
 		if vlines!=[]:        
@@ -150,7 +150,8 @@ def plot_all(k_mode, t, rv, erv, ind, eind, ts_xlabel, rv_xlabel, pe_xlabel, ind
 					ax.set_xlabel(pe_xlabel)
 
 	fig6.align_ylabels(f6_axes[:, 0])
-	plt.savefig(file_name)
+	if file_name !=[]:
+		plt.savefig(file_name)
 	plt.show()    
 	plt.close('all')
 
