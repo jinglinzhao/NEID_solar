@@ -60,7 +60,8 @@ def weighted_avg_2D(values, weights):
 def random_ts(t, y, yerr, test_ratio=0.2):
     '''
         Randomly select; 
-        Not suitable for time series data.
+        Not suitable for time series data; 
+        Not used in the following.
     '''
     idx_test = sorted(random.sample(list(np.arange(len(t))), int(len(t)*test_ratio)))
     idx_train = [n for n in np.arange(len(t)) if not (n in idx_test)]
@@ -68,7 +69,22 @@ def random_ts(t, y, yerr, test_ratio=0.2):
     t_test, y_test, yerr_test = t[idx_test], y[idx_test], yerr[idx_test]
     return idx_test, t_train, y_train, yerr_train, t_test, y_test, yerr_test
 
-
+def sample_ts(t, y, yerr, n_splits, test_portion):
+    
+    from sklearn.model_selection import KFold
+    '''
+        Return a consecutive subsample specified by test_portion.
+    '''
+    i = -1
+    kf = KFold(n_splits)
+    for train_index, test_index in kf.split(np.arange(len(t))):
+        i+=1
+        if (i==test_portion):
+            t_train, y_train, yerr_train = t[train_index], y[train_index], yerr[train_index]
+            t_test, y_test, yerr_test = t[test_index], y[test_index], yerr[test_index]
+            return t_train, y_train, yerr_train, t_test, y_test, yerr_test
+        
+        
 def moving_ave(t, y, width=2):
     w_aves = []
     for t_i in t:
