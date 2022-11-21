@@ -82,7 +82,7 @@ def sample_ts(t, y, yerr, n_splits, test_portion):
         if (i==test_portion):
             t_train, y_train, yerr_train = t[train_index], y[train_index], yerr[train_index]
             t_test, y_test, yerr_test = t[test_index], y[test_index], yerr[test_index]
-            return t_train, y_train, yerr_train, t_test, y_test, yerr_test
+            return t_train, y_train, yerr_train, t_test, y_test, yerr_test                
         
         
 def moving_ave(t, y, width=2):
