@@ -5,6 +5,7 @@ from datetime import datetime
 from scipy import stats
 import random
 from sklearn.model_selection import KFold
+import matplotlib.pyplot as plt
 
 import george
 from george import kernels
@@ -120,6 +121,81 @@ def cov(x, y):
     return sum((x-np.mean(x))*(y-np.mean(y)))/len(x)
 
 
+def plot_ts_corr(k_mode, t, rv, erv, ind, eind, ts_xlabel, rv_xlabel, pe_xlabel, ind_yalbel, file_name, height_ratio=0.7, vlines=[], HARPS=True):
+
+	'''
+	e.g. 
+		k_mode 		= 11
+		t 			= bjd_daily
+		rv 			= rv_daily
+		erv 		= erv_daily
+		ind 		= ΔRV_k
+		eind 	 	= eRV_FT_k
+		ts_xlabel 	= 'BJD - 2400000 [d]'
+		rv_xlabel 	= '$RV_{HARPS}$'
+		pe_xlabel 	= 'Period [days]'
+		ind_yalbel	= 'A'
+		file_name 	= 'time-series_and_shift_correlation.pdf'
+
+	'''
+
+	from sklearn.linear_model import LinearRegression
+
+	# set up the plotting configureations
+	alpha1, alpha2 = [0.5,0.2]
+	widths 	= [7,1]
+	heights = [1]*(k_mode+1)
+	gs_kw 	= dict(width_ratios=widths, height_ratios=heights)
+	plt.rcParams.update({'font.size': 12})
+	fig6, f6_axes = plt.subplots(figsize=(16, k_mode+1), ncols=2, nrows=k_mode+1, constrained_layout=True,
+	                             gridspec_kw=gs_kw)
+
+	# plots 
+	for r, row in enumerate(f6_axes):
+		for c, ax in enumerate(row):	
+
+			# time-series 
+			if c==0:
+				if r==0:
+					ax.errorbar(t, rv-np.mean(rv), erv, marker='.', ms=5, color='black', ls='none', alpha=alpha1)
+					ax.set_title('Time-series')
+					ax.set_ylabel(rv_xlabel)
+				else:				
+					ax.errorbar(t, ind[r-1,:], eind[r-1,:],  marker='.', ms=5, color='black', ls='none', alpha=alpha1)
+					ax.set_ylabel(ind_yalbel + '$_{' + str(r) + '}$')
+				if r!=k_mode:
+					ax.tick_params(labelbottom=False)
+				else:
+					ax.set_xlabel(ts_xlabel)
+
+			if c==1:
+				if r==0:
+					reg = LinearRegression().fit(rv.reshape(-1, 1), rv.reshape(-1, 1))
+					score = reg.score(rv.reshape(-1, 1), rv.reshape(-1, 1))
+					adjust_R2 = 1-(1-score)*(len(t)-1)/(len(t)-1-1)
+					title = r'$\bar{R}$' + r'$^2$'
+					ax.set_title(title + ' = {:.2f}'.format(adjust_R2))					
+					ax.plot(rv-np.mean(rv), rv-np.mean(rv), 'k.', alpha = alpha2)				
+				if r>0:
+					reg = LinearRegression().fit(rv.reshape(-1, 1), ind[r-1,:].reshape(-1, 1))
+					score = reg.score(rv.reshape(-1, 1), ind[r-1,:].reshape(-1, 1))
+					adjust_R2 = 1-(1-score)*(len(t)-1)/(len(t)-1-1)
+					title = r'$\bar{R}$' + r'$^2$'
+					ax.set_title(title + ' = {:.2f}'.format(adjust_R2))
+					ax.plot(rv-np.mean(rv), ind[r-1,:], 'k.', alpha = alpha2)
+				if r!=k_mode:
+					ax.tick_params(labelbottom=False)
+				else:
+					ax.set_xlabel(rv_xlabel)
+				ax.yaxis.tick_right()
+
+	fig6.align_ylabels(f6_axes[:, 0])
+	if file_name !=[]:
+		plt.savefig(file_name)
+	plt.show()    
+	plt.close('all')
+    
+    
 # def GP(t, y, yerr):
 #     w0 = 2*np.pi/5.2
 #     Q = 10
